@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 
 import { useGif } from "../../hook/useGif";
 import { Results } from "../../components/Results";
+import { Spin } from "antd";
 
 export const UploadGif: FC = () => {
   const { uploadGif } = useGif();
@@ -16,6 +17,7 @@ export const UploadGif: FC = () => {
       .then((res) => {
         setStatusCode(res);
         setIsSuccess(true);
+        setIsLoading(false);
         console.log("res", res);
       })
       .catch(() => {
@@ -35,6 +37,6 @@ export const UploadGif: FC = () => {
         onChange={handlerOnChange}
       />
     );
-  if (isLoading) return <div>cargando</div>;
+  if (isLoading) return <Spin size="large" />;
   if (statusCode === 201) return <Results status={isSuccess} />;
 };

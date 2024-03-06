@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { IApi, IGet } from "./api.interface";
+import { IApi, IGet, IUpload } from "./api.interface";
 
 export class ApiRepository<T> implements IApi<T> {
   private readonly url: string;
@@ -18,6 +18,22 @@ export class ApiRepository<T> implements IApi<T> {
         throw new Error(error.message);
       }
       throw new Error(error as string);
+    }
+  }
+
+  async uploadFile({ path, formData }: IUpload): Promise<T> {
+    try {
+      const { data } = await axios.post<T>(`${this.url}${path}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.message);
+      }
+      throw new Error(`${error} -> es un error` as string);
     }
   }
 }
